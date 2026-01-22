@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/select'
 import { Loader2, X, Trash2, Save, Plus, Upload, Image as ImageIcon } from 'lucide-react'
 import type { AdminProductWithVariants, QuantityVariant, FlavorVariant } from '@/types/admin'
-import { ADMIN_CATEGORIES, ADMIN_STOCK_OPTIONS } from '@/types/admin'
+import { ADMIN_STOCK_OPTIONS } from '@/types/admin'
+import { allCategories } from '@/lib/categories'
 
 interface ProductFormProps {
   product: AdminProductWithVariants
@@ -321,9 +322,9 @@ const ProductForm = memo(function ProductForm({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {ADMIN_CATEGORIES.map((cat) => (
-                        <SelectItem key={cat} value={cat}>
-                          {cat}
+                      {allCategories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.name}>
+                          {cat.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
