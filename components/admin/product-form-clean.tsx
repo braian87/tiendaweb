@@ -103,11 +103,36 @@ const ProductForm = memo(function ProductForm({
     setUploadError(null)
 
     try {
-      const { uploadProductImageAction } = await import('@/app/actions/admin-products')
-      
-      const uploadPromises = Array.from(files).map((file) =>
-        uploadProductImageAction(file, formData.id || 0)
-      )
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('productId', String(product.id || 0))
+
+        const response = await fetch('/api/upload-image', {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        if (!data || typeof data !== 'object') {
+          throw new Error('Invalid response from server')
+        }
+
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
+        if (!data.url) {
+          throw new Error('No URL returned from server')
+        }
+
+        return data.url
+      })
 
       const uploadedUrls = await Promise.all(uploadPromises)
       setImages((prev: string[]) => [...prev, ...uploadedUrls])
@@ -115,11 +140,12 @@ const ProductForm = memo(function ProductForm({
       // Limpiar input
       e.target.value = ''
     } catch (err) {
+      console.error('Upload error:', err)
       setUploadError(err instanceof Error ? err.message : 'Error subiendo imágenes')
     } finally {
       setIsUploadingImages(false)
     }
-  }, [formData.id])
+  }, [product.id])
 
   const handleRemoveImage = useCallback((index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index))
