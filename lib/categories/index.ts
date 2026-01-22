@@ -10,7 +10,6 @@ import { perfumeriaCategory } from "./perfumeria"
 import { celularesCategory } from "./celulares"
 import { vapersCategory } from "./vapers"
 import { maquillajeCategory } from "./maquillaje"
-import { ofertasCategory } from "./ofertas"
 
 export const allCategories = [
   tvAudioCategory,
@@ -25,7 +24,6 @@ export const allCategories = [
   celularesCategory,
   vapersCategory,
   maquillajeCategory,
-  ofertasCategory,
 ]
 
 export type Category = {
