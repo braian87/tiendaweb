@@ -6,7 +6,7 @@ export const ofertasProducts: Product[] = [
     name: "Combo Mayorista - 16 Productos",
     price: 20100,
     image: "/images/combo-1.jpeg",
-    category: "Ofertas",
+    category: "belleza-y-cuidado-personal",
     slug: "combo-mayorista-16-productos",
     description: "Combo ideal para arrancar a emprender con 16 productos de maquillaje y skincare.",
     fullDescription:
