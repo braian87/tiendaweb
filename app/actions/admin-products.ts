@@ -164,6 +164,14 @@ export async function createProduct(
 ): Promise<AdminProductWithVariants> {
   const supabase = await createServerClient()
 
+  console.log('[CREATE_PRODUCT] Recibido:', {
+    product: productData.name,
+    quantityVariantsCount: quantityVariants?.length || 0,
+    flavorVariantsCount: flavorVariants?.length || 0,
+    quantityVariants: quantityVariants,
+    flavorVariants: flavorVariants,
+  })
+
   // Validar slug único
   const exists = await slugExists(productData.slug)
   if (exists) {
@@ -186,6 +194,7 @@ export async function createProduct(
   // Crear variantes de cantidad si existen
   let createdQtyVariants: any[] = []
   if (quantityVariants && quantityVariants.length > 0) {
+    console.log('[CREATE_PRODUCT] Insertando variantes de cantidad:', quantityVariants)
     const { data, error } = await supabase
       .from('quantity_variants')
       .insert(quantityVariants.map((v) => ({ ...v, product_id: productId })))
@@ -198,11 +207,13 @@ export async function createProduct(
     }
 
     createdQtyVariants = data || []
+    console.log('[CREATE_PRODUCT] Variantes de cantidad creadas:', createdQtyVariants)
   }
 
   // Crear variantes de sabor si existen
   let createdFlavorVariants: any[] = []
   if (flavorVariants && flavorVariants.length > 0) {
+    console.log('[CREATE_PRODUCT] Insertando variantes de sabor:', flavorVariants)
     const { data, error } = await supabase
       .from('flavor_variants')
       .insert(flavorVariants.map((v) => ({ ...v, product_id: productId })))
@@ -215,6 +226,7 @@ export async function createProduct(
     }
 
     createdFlavorVariants = data || []
+    console.log('[CREATE_PRODUCT] Variantes de sabor creadas:', createdFlavorVariants)
   }
 
   return {
