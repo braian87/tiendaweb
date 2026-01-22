@@ -89,7 +89,13 @@ const ProductForm = memo(function ProductForm({
     if (!validateForm()) return
 
     try {
-      await onSave({ ...formData, images }, quantityVariants, flavorVariants)
+      // Si hay imágenes y no hay imagen principal, usar la primera
+      const dataToSave = {
+        ...formData,
+        images,
+        image: formData.image || images[0] || null,
+      }
+      await onSave(dataToSave, quantityVariants, flavorVariants)
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Error al guardar')
     }
@@ -366,6 +372,16 @@ const ProductForm = memo(function ProductForm({
                       className="object-cover"
                     />
                   </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFormData((p) => ({ ...p, image: null }))}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Quitar imagen principal
+                  </Button>
                 </div>
               )}
 
@@ -426,28 +442,49 @@ const ProductForm = memo(function ProductForm({
 
                 {/* Images Grid */}
                 {images.length > 0 && (
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-                    {images.map((imageUrl, index) => (
-                      <div
-                        key={index}
-                        className="group relative aspect-square overflow-hidden rounded-lg border border-muted bg-muted"
-                      >
-                        <Image
-                          src={imageUrl}
-                          alt={`Imagen ${index + 1}`}
-                          fill
-                          className="object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveImage(index)}
-                          disabled={isLoading || isUploadingImages}
-                          className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100 disabled:opacity-100"
+                  <div>
+                    <p className="text-sm font-medium mb-2">Imágenes subidas</p>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+                      {images.map((imageUrl, index) => (
+                        <div
+                          key={index}
+                          className="group relative aspect-square overflow-hidden rounded-lg border border-muted bg-muted"
                         >
-                          <Trash2 className="h-5 w-5 text-white" />
-                        </button>
-                      </div>
-                    ))}
+                          <Image
+                            src={imageUrl}
+                            alt={`Imagen ${index + 1}`}
+                            fill
+                            className="object-cover"
+                          />
+                          <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                            {formData.image !== imageUrl && (
+                              <button
+                                type="button"
+                                onClick={() => setFormData((p) => ({ ...p, image: imageUrl }))}
+                                title="Establecer como imagen principal"
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs"
+                              >
+                                Principal
+                              </button>
+                            )}
+                            {formData.image === imageUrl && (
+                              <span className="bg-green-500 text-white px-2 py-1 rounded text-xs">
+                                ✓ Principal
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveImage(index)}
+                              disabled={isLoading || isUploadingImages}
+                              title="Eliminar imagen"
+                              className="bg-red-500 hover:bg-red-600 text-white p-1 rounded"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
