@@ -105,6 +105,12 @@ const ProductForm = memo(function ProductForm({
     const files = e.target.files
     if (!files || !files.length) return
 
+    // Validar que el producto tenga ID
+    if (!product.id || product.id === 0) {
+      setUploadError('El producto debe ser guardado primero antes de subir imágenes')
+      return
+    }
+
     setIsUploadingImages(true)
     setUploadError(null)
 
@@ -112,7 +118,7 @@ const ProductForm = memo(function ProductForm({
       const uploadPromises = Array.from(files).map(async (file) => {
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('productId', String(product.id || 0))
+        formData.append('productId', String(product.id))
 
         const response = await fetch('/api/upload-image', {
           method: 'POST',
@@ -120,7 +126,8 @@ const ProductForm = memo(function ProductForm({
         })
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          const errorData = await response.json()
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
         }
 
         const data = await response.json()
