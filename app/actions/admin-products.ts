@@ -7,6 +7,7 @@
 'use server'
 
 import { createServerClient } from '@/lib/supabase/server'
+import { allCategories } from '@/lib/categories'
 import type {
   AdminProduct,
   AdminProductWithVariants,
@@ -17,6 +18,37 @@ import type {
   PaginatedResponse,
 } from '@/types/admin'
 import { PRODUCTS_PER_PAGE } from '@/types/admin'
+
+/**
+ * Normaliza el nombre de categoría para asegurar que siempre sea el nombre correcto
+ * Busca por nombre o ID en allCategories
+ */
+function normalizeCategoryName(categoryValue: string): string {
+  if (!categoryValue) return categoryValue
+
+  const normalized = categoryValue.toLowerCase().trim()
+
+  // Mapeo explícito de valores antiguos
+  const oldToNewMap: Record<string, string> = {
+    'accesorios-celular': 'Accesorios para celular',
+  }
+
+  // Si está en el mapeo, usar el nuevo valor
+  if (oldToNewMap[normalized]) {
+    return oldToNewMap[normalized]
+  }
+
+  // Buscar por nombre exacto (case-insensitive)
+  const byName = allCategories.find(cat => cat.name.toLowerCase() === normalized)
+  if (byName) return byName.name
+
+  // Buscar por ID (case-insensitive)
+  const byId = allCategories.find(cat => cat.id.toLowerCase() === normalized)
+  if (byId) return byId.name
+
+  // Si no se encuentra, devolver el valor original (probablemente ya sea correcto)
+  return categoryValue
+}
 
 // ============================================================================
 // LECTURA DE PRODUCTOS
@@ -190,13 +222,9 @@ export async function createProduct(
     throw new Error('Ya existe un producto con este slug')
   }
 
-  // Normalizar categoría - mapear IDs antiguos a nombres correctos
-  const categoryNameMap: Record<string, string> = {
-    'accesorios-celular': 'Accesorios para celular',
-  }
-  
-  const normalizedCategory = categoryNameMap[productData.category.toLowerCase()] || productData.category
-  
+  // Normalizar categoría usando la nueva función
+  const normalizedCategory = normalizeCategoryName(productData.category)
+
   const dataToInsert = {
     ...productData,
     category: normalizedCategory,
@@ -281,14 +309,10 @@ export async function updateProduct(data: UpdateProductDTO): Promise<AdminProduc
   }
 
   // Normalizar categoría si está presente
-  const categoryNameMap: Record<string, string> = {
-    'accesorios-celular': 'Accesorios para celular',
-  }
-  
   const normalizedUpdates = {
     ...updates,
     ...(updates.category && {
-      category: categoryNameMap[updates.category.toLowerCase()] || updates.category,
+      category: normalizeCategoryName(updates.category),
     }),
   }
 
