@@ -1,7 +1,7 @@
 "use server"
 
 import { cookies } from "next/headers"
-import { randomBytes } from "crypto"
+import { randomBytes, createHmac } from "crypto"
 
 declare global {
   var adminTokens: { [key: string]: { email: string; expiresAt: number } } | undefined
@@ -28,31 +28,53 @@ export async function login(email: string, password: string): Promise<LoginResul
       }
     }
 
-    // Create a session token (in production, use proper session management)
-    const token = randomBytes(32).toString("hex")
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+    // Create a signed token (HMAC) so sessions persist across serverless instances.
+    // Requires `ADMIN_JWT_SECRET` to be set in Vercel environment variables.
+    const secret = process.env.ADMIN_JWT_SECRET
+    if (!secret) {
+      console.warn('ADMIN_JWT_SECRET is not set. Falling back to in-memory tokens (not recommended on serverless).')
+      const token = randomBytes(32).toString("hex")
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
-    // Set secure cookie
+      const cookieStore = await cookies()
+      cookieStore.set("admin_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        expires: expiresAt,
+      })
+
+      global.adminTokens = global.adminTokens || {}
+      global.adminTokens[token] = {
+        email,
+        expiresAt: expiresAt.getTime(),
+      }
+
+      return {
+        success: true,
+        token,
+      }
+    }
+
+    const expiresAt = Math.floor(Date.now() / 1000) + 24 * 60 * 60 // seconds
+    const payload = Buffer.from(JSON.stringify({ email, exp: expiresAt })).toString('base64url')
+    const signature = createHmac('sha256', secret).update(payload).digest('base64url')
+    const signed = `${payload}.${signature}`
+
     const cookieStore = await cookies()
-    cookieStore.set("admin_token", token, {
+    cookieStore.set("admin_token", signed, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      expires: expiresAt,
+      // expires expects a Date
+      expires: new Date(expiresAt * 1000),
     })
-
-    // Store token in memory (for simple demo - in production use proper session storage)
-    // This is a simple approach; for production, store in database or Redis
-    global.adminTokens = global.adminTokens || {}
-    global.adminTokens[token] = {
-      email,
-      expiresAt: expiresAt.getTime(),
-    }
 
     return {
       success: true,
-      token,
+      token: signed,
     }
   } catch (error) {
     console.error("Login error:", error)
@@ -81,13 +103,29 @@ export async function verifyAdminToken(): Promise<boolean> {
       return false
     }
 
-    // Check if token exists and hasn't expired
+    // If ADMIN_JWT_SECRET present, verify HMAC-signed token
+    const secret = process.env.ADMIN_JWT_SECRET
+    if (secret && token.includes('.')) {
+      const [payloadB64, signature] = token.split('.')
+      try {
+        const expected = createHmac('sha256', secret).update(payloadB64).digest('base64url')
+        if (signature !== expected) return false
+
+        const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf8')
+        const { exp } = JSON.parse(payloadJson)
+        if (!exp || typeof exp !== 'number') return false
+        return exp > Math.floor(Date.now() / 1000)
+      } catch (e) {
+        return false
+      }
+    }
+
+    // Fallback: in-memory token (not reliable on serverless)
     if (global.adminTokens && global.adminTokens[token]) {
       const tokenData = global.adminTokens[token]
       if (tokenData.expiresAt > Date.now()) {
         return true
       } else {
-        // Token expired, delete it
         delete global.adminTokens[token]
       }
     }
@@ -104,9 +142,25 @@ export async function getAdminUser() {
     const cookieStore = await cookies()
     const token = cookieStore.get("admin_token")?.value
 
-    if (!token || !global.adminTokens || !global.adminTokens[token]) {
-      return null
+    if (!token) return null
+
+    const secret = process.env.ADMIN_JWT_SECRET
+    if (secret && token.includes('.')) {
+      try {
+        const [payloadB64, signature] = token.split('.')
+        const expected = createHmac('sha256', secret).update(payloadB64).digest('base64url')
+        if (signature !== expected) return null
+        const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf8')
+        const data = JSON.parse(payloadJson)
+        if (data.exp && data.exp > Math.floor(Date.now() / 1000)) {
+          return { email: data.email }
+        }
+      } catch (e) {
+        return null
+      }
     }
+
+    if (!global.adminTokens || !global.adminTokens[token]) return null
 
     const tokenData = global.adminTokens[token]
     if (tokenData.expiresAt > Date.now()) {
