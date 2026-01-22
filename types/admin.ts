@@ -122,7 +122,7 @@ export const ADMIN_CATEGORIES = [
   'Celulares',
   'TV y Audio',
   'Tecnología',
-  'Accesorios Celular',
+  'Accesorios para celular',
   'Electrodomésticos',
   'Hogar',
   'Seguridad',
