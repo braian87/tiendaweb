@@ -9,8 +9,8 @@ declare global {
 
 // Simple credentials for demo (in production, use Supabase Auth or proper auth system)
 // Change these credentials to your desired admin credentials
-const ADMIN_EMAIL = "admin@example.com"
-const ADMIN_PASSWORD = "admin123" // Change this to a secure password
+const ADMIN_EMAIL = "usaimport@admin.com"
+const ADMIN_PASSWORD = "UsaImp0rt@2025$ecure!" // Change this to a secure password
 
 interface LoginResult {
   success: boolean
