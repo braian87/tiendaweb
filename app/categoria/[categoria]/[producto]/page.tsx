@@ -21,10 +21,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
   
   console.log("[DETAIL] ProductPage - categoria:", categoria, "producto:", producto)
   
-  // Verify category exists
-  const category = allCategories.find((cat) => slugify(cat.name) === categoria)
+  // Verify category exists - match by ID, not by slugified name
+  const category = allCategories.find((cat) => cat.id === categoria)
   console.log("[DETAIL] Found category:", category?.name || "NOT FOUND")
-  console.log("[DETAIL] Available categories:", allCategories.map(c => ({ name: c.name, slug: slugify(c.name) })))
+  console.log("[DETAIL] Available categories:", allCategories.map(c => ({ id: c.id, name: c.name })))
   
   if (!category) {
     console.log("[DETAIL] Category not found, returning 404")
@@ -47,7 +47,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     slug: product.slug,
     category: product.category,
     expectedCategory: category.name,
-    match: product.category === category.name
+    match: product.category.toLowerCase().trim() === category.name.toLowerCase().trim()
   })
   
   // Verify product belongs to the requested category (case-insensitive)
