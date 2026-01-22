@@ -108,14 +108,14 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
     if (hasQuantityVariants && selectedQuantityVariant) {
       const variant = product.quantityVariants![Number.parseInt(selectedQuantityVariant)]
       if (variant) {
-        const rangeText = variant.max ? `${variant.min} a ${variant.max} unidades` : `${variant.min}+ unidades`
+        const rangeText = variant.max_quantity ? `${variant.min_quantity} a ${variant.max_quantity} unidades` : `${variant.min_quantity}+ unidades`
         variantInfo = rangeText
         priceToUse = variant.price
       }
     }
 
     if (hasFlavorVariants && selectedFlavorVariant) {
-      const variant = product.flavorVariants!.find((v) => v.id === selectedFlavorVariant)
+      const variant = product.flavorVariants!.find((v: any) => v.id === selectedFlavorVariant)
       if (variant) {
         variantInfo = variantInfo ? `${variantInfo} - ${variant.name}` : variant.name
       }
@@ -173,7 +173,7 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
 
             {totalImages > 1 && (
               <div className="flex gap-2 overflow-x-auto pb-2">
-                {images.map((image, index) => (
+                {images.map((image: any, index: number) => (
                   <button
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
@@ -225,7 +225,7 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
                       className="w-full border border-black/10 rounded-xl px-4 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-black/20 transition-all"
                     >
                       <option value="">Selecciona el sabor</option>
-                      {product.flavorVariants!.map((variant) => {
+                      {product.flavorVariants!.map((variant: any) => {
                         const flavorStockInfo = getStockInfo(variant.stock)
                         return (
                           <option key={variant.id} value={variant.id} disabled={variant.stock === "out"}>
@@ -248,10 +248,10 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
                       className="w-full border border-black/10 rounded-xl px-4 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-black/20 transition-all"
                     >
                       <option value="">Selecciona la cantidad</option>
-                      {product.quantityVariants!.map((variant, index) => {
-                        const rangeText = variant.max
-                          ? `${variant.min} a ${variant.max} unidades`
-                          : `${variant.min}+ unidades`
+                      {product.quantityVariants!.map((variant: any, index: number) => {
+                        const rangeText = variant.max_quantity
+                          ? `${variant.min_quantity} a ${variant.max_quantity} unidades`
+                          : `${variant.min_quantity}+ unidades`
                         return (
                           <option key={index} value={index.toString()}>
                             {rangeText} - ${variant.price.toLocaleString("es-AR")}
