@@ -116,7 +116,7 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
     }
 
     if (hasFlavorVariants && selectedFlavorVariant) {
-      const variant = product.flavorVariants!.find((v: any) => v.id === selectedFlavorVariant)
+      const variant = product.flavorVariants![Number.parseInt(selectedFlavorVariant)]
       if (variant) {
         flavorVariantInfo = variant.name
       }
@@ -228,10 +228,10 @@ export default function ProductDetail({ product, relatedProducts = [] }: Product
                       className="w-full border border-black/10 rounded-xl px-4 py-3 text-black bg-white focus:outline-none focus:ring-2 focus:ring-black/20 transition-all"
                     >
                       <option value="">Selecciona el sabor</option>
-                      {product.flavorVariants!.map((variant: any) => {
+                      {product.flavorVariants!.map((variant: any, index: number) => {
                         const flavorStockInfo = getStockInfo(variant.stock)
                         return (
-                          <option key={variant.id} value={variant.id} disabled={variant.stock === "out"}>
+                          <option key={index} value={index.toString()} disabled={variant.stock === "out"}>
                             {variant.name} - {flavorStockInfo.label}
                           </option>
                         )
