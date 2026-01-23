@@ -3,7 +3,7 @@ import { allCategories } from "@/lib/categories"
 
 // Mapeo de IDs antiguos a nuevos IDs
 const oldIdToNewId: Record<string, string> = {
-  "accesorios-para-celular": "accesorios-celular",
+  "accesorios-celular": "accesorios-para-celular",
 }
 
 export function getCategorySlug(categoryName: string): string {
