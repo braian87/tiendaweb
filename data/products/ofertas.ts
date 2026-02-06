@@ -118,4 +118,145 @@ export const ofertasProducts: Product[] = [
     ],
     stock: "high",
   },
+  {
+    id: 63,
+    name: "Placa Infrarroja",
+    price: 19999,
+    image: "/placa-infrarroja.jpeg",
+    category: "Electrodomésticos",
+    slug: "placa-infrarroja",
+    description: "Placa de cocción infrarroja portátil con controles digitales y múltiples niveles de potencia.",
+    fullDescription:
+      "Cocina de manera eficiente y segura con esta placa de cocción infrarroja portátil. Tecnología de calentamiento infrarrojo que distribuye el calor de manera uniforme para una cocción perfecta.\n\nPanel de control digital con pantalla LED que muestra la temperatura y el tiempo de cocción. Múltiples niveles de potencia ajustables para diferentes tipos de preparaciones. Funciones preestablecidas para cocinar, freír, hervir y mantener caliente.\n\nSuperficie de cristal templado fácil de limpiar y resistente a altas temperaturas. Diseño compacto y portátil ideal para cocinas pequeñas, apartamentos, oficinas o como placa adicional. Sistema de seguridad con apagado automático y protección contra sobrecalentamiento.",
+    images: ["/placa-infrarroja.jpeg"],
+    features: [
+      "Tecnología infrarroja",
+      "Panel de control digital",
+      "Pantalla LED",
+      "Múltiples niveles de potencia",
+      "Funciones preestablecidas",
+      "Superficie de cristal templado",
+      "Fácil de limpiar",
+      "Apagado automático",
+      "Protección contra sobrecalentamiento",
+      "Diseño compacto y portátil",
+    ],
+  },
+  {
+    id: 6,
+    name: "Combo Karseell",
+    price: 27900,
+    image: "/images/maca-hair-mask-6-1-600x600-c0de168437d9fd15d417503595588658-1024-1024.webp",
+    category: "Belleza y Cuidado Personal",
+    slug: "combo-karseell",
+    description: "Combo completo Karseell con crema de colágeno y aceite de maca para un tratamiento capilar integral.",
+    stock: "high",
+    fullDescription:
+      "El Combo Karseell combina lo mejor de ambos mundos: la crema de colágeno de 500ml y el aceite de maca de 50ml para un tratamiento capilar completo y profesional.\n\nLa crema de colágeno contiene aceite de argán, maca y hierbas naturales que reparan profundamente el cabello seco y dañado, proporcionando una hidratación intensa desde la primera aplicación. El aceite de maca complementa el tratamiento nutriendo, reparando y revitalizando cada hebra.\n\nJuntos, estos productos transforman el cabello en una melena suave, brillante, manejable y completamente restaurada. Ideal para todo tipo de cabello, especialmente cabello teñido, decolorado y procesado químicamente.",
+    images: [
+      "/images/maca-hair-mask-6-1-600x600-c0de168437d9fd15d417503595588658-1024-1024.webp",
+      "/images/d-692566-mla82295728697-022025-c-1817f710c15b37bb7817503594865260-1024-1024.webp",
+    ],
+    features: [
+      "Incluye Crema de Colágeno 500ml",
+      "Incluye Aceite de Maca 50ml",
+      "Tratamiento capilar completo",
+      "Aceite de argán y maca",
+      "Reparación profunda",
+      "Hidratación intensa",
+      "Resultados visibles inmediatos",
+      "Ideal para todo tipo de cabello",
+      "Perfecto para cabello teñido y decolorado",
+      "100% original",
+    ],
+    quantityVariants: [
+      { min: 11, max: 20, price: 26800 },
+      { min: 21, max: 30, price: 25700 },
+    ],
+  },
+   {
+  id: 9016,
+  name: "MNKE Bars 6500 Puffs",
+  price: 3000,
+  image: "/images/mnke-bars-6500-puffs.webp",
+  category: "Vapers",
+  slug: "mnke-bars-6500-puffs",
+  description:
+    "MNKE Bars 6500 Puffs es un vaper desechable práctico y compacto, ideal para el uso diario.\n\nOfrece una buena duración con sabores intensos y frescos, pensado para quienes buscan simplicidad y variedad.",
+  stock: "high",
+  images: ["/images/mnke-bars-6500-puffs.webp"],
+  features: [
+    "Vaper desechable",
+    "Hasta 6500 puffs",
+    "Formato compacto",
+    "Uso sencillo",
+    "Amplia variedad de sabores"
+  ],
+  flavorVariants: [
+    { id: "mnke-6500-grapple", name: "Grapple", stock: "high" },
+    { id: "mnke-6500-fresh-mint", name: "Fresh Mint", stock: "high" },
+    { id: "mnke-6500-lemon-tart", name: "Lemon Tart", stock: "high" },
+    { id: "mnke-6500-peach-ring", name: "Peach Ring", stock: "high" },
+    { id: "mnke-6500-straw-melon", name: "Straw Melon", stock: "high" },
+    { id: "mnke-6500-mango", name: "Mango", stock: "high" },
+    { id: "mnke-6500-gummy", name: "Gummy", stock: "high" },
+    { id: "mnke-6500-mango-guava", name: "Mango Guava", stock: "high" },
+    { id: "mnke-6500-raspberry-mint", name: "Raspberry Mint", stock: "high" },
+    { id: "mnke-6500-blue-kiwi-ice", name: "Blue Kiwi Ice", stock: "high" }
+  ]
+},
+   {
+  id: 9015,
+  name: "VOZOL VISTA 20K",
+  price: 8500,
+  image: "/images/vozol-vista-20k.webp",
+  category: "Vapers",
+  slug: "vozol-vista-20k",
+  description:
+    "VOZOL VISTA 20K es un vaper desechable diseñado para brindar una experiencia equilibrada entre sabor, rendimiento y portabilidad.\n\nCuenta con sabores frescos e intensos, ideal para el uso diario.",
+  stock: "high",
+  images: ["/images/vozol-vista-20k.webp"],
+  features: [
+    "Vaper desechable",
+    "Capacidad 20K",
+    "Sabores refrescantes",
+    "Formato compacto",
+    "Uso práctico"
+  ],
+  flavorVariants: [
+    { id: "vozol-vista-20k-banana-ice", name: "Banana Ice", stock: "high" },
+    { id: "vozol-vista-20k-blueberry-ice", name: "Blueberry Ice", stock: "high" },
+    { id: "vozol-vista-20k-ice-mint", name: "Ice Mint", stock: "high" },
+    { id: "vozol-vista-20k-green-apple", name: "Green Apple", stock: "high" },
+    { id: "vozol-vista-20k-strawberry-ice", name: "Strawberry Ice", stock: "high" }
+  ]
+},
+  {
+  id: 9017,
+  name: "Vozol Luo Star 20000 Puffs",
+  price: 8500,
+  image: "/images/vozol-luo-star-20000-puffs.webp",
+  category: "Vapers",
+  slug: "vozol-luo-star",
+  description:
+    "El Vozol Luo Star 20000 Puffs es un vaporizador desechable de alto rendimiento, diseñado para quienes buscan máxima duración y una experiencia premium.\n\nCuenta con diseño totalmente transparente, pantalla en color y tecnología Dual Mesh Coil, ofreciendo sabores intensos y consistentes durante todo su uso.",
+  stock: "high",
+  images: ["/images/vozol-luo-star-20000-puffs.webp"],
+  features: [
+    "Vaper desechable",
+    "Hasta 20000 puffs",
+    "Dual Mesh Coil",
+    "Pantalla en color",
+    "Diseño totalmente transparente",
+    "Batería de 650mAh",
+    "24ML de e-líquido"
+  ],
+  flavorVariants: [
+    { id: "vozol-luo-star-banana-ice", name: "Banana Ice", stock: "high" },
+    { id: "vozol-luo-star-blueberry-ice", name: "Blueberry Ice", stock: "high" },
+    { id: "vozol-luo-star-green-apple", name: "Green Apple", stock: "high" },
+    { id: "vozol-luo-star-ice-mint", name: "Ice Mint", stock: "high" },
+    { id: "vozol-luo-star-strawberry-ice", name: "Strawberry Ice", stock: "high" }
+  ]
+},
 ]
